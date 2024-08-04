@@ -1,3 +1,4 @@
 venv
 zendit/.env
 .env
+zendit/index.html

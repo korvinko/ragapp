@@ -17,7 +17,7 @@ template = """Use the following pieces of context to answer the question at the 
 If you don't know the answer, just say that you don't know, don't try to make up an answer.
 Use three sentences maximum and keep the answer as concise as possible. Always answer in Zendit context.
 {context}
-Question: {question}
+Question: {question}. This question is related to zendit.io.
 Helpful Answer:"""
 QA_CHAIN_PROMPT = PromptTemplate(
     input_variables=["context", "question"],

@@ -6,7 +6,10 @@ from langchain.callbacks.manager import CallbackManager
 from langchain.chains import RetrievalQA
 from langchain_core.prompts import PromptTemplate
 from libs.storage import get_vector_store
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -18,9 +21,9 @@ class QueryRequest(BaseModel):
 # Define the prompt template
 template = """Use the following pieces of context to answer the question at the end.
 If you don't know the answer, just say that you don't know, don't try to make up an answer.
-Use three sentences maximum and keep the answer as concise as possible. Always answer in Zendit context. Return output in markdown format.  
+Use three sentences maximum and keep the answer as concise as possible. Always answer in Zendit context. Return output in markdown format.
 {context}
-Question: {question}
+Question: {question}. This question is related to zendit.io.
 Helpful Answer:"""
 QA_CHAIN_PROMPT = PromptTemplate(
     input_variables=["context", "question"],
