@@ -1,5 +1,3 @@
-# File: /home/korvinko/Projects/ragapp/api.py
-
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from helpers import getVectorStore
@@ -8,6 +6,7 @@ from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.callbacks.manager import CallbackManager
 from langchain.chains import RetrievalQA
 from langchain_core.prompts import PromptTemplate
+import os
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -30,7 +29,7 @@ QA_CHAIN_PROMPT = PromptTemplate(
 
 # Set up the vector store and model
 vc = getVectorStore()
-llm = Ollama(model="qwen2:7b", callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]))
+llm = Ollama(model=os.getenv("OLLAMA_MODEL"), callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]))
 qa_chain = RetrievalQA.from_chain_type(
     llm,
     retriever=vc.as_retriever(),

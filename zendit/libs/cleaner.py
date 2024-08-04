@@ -1,4 +1,7 @@
+import os
+
 from langchain_community.llms import Ollama
+
 
 class DatasetCleaner:
     llm: Ollama
@@ -6,7 +9,7 @@ class DatasetCleaner:
 
     def __init__(self):
         self.llm = Ollama(
-            model="qwen2:7b",
+            model=os.getenv("OLLAMA_MODEL"),
             num_ctx=25048,  # input number of token limit
             num_predict=25048,  # output number of token limit
             temperature=0.3,  # precise

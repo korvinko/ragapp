@@ -1,6 +1,7 @@
 from langchain_community.document_loaders import AsyncChromiumLoader
 from bs4 import BeautifulSoup
 
+
 def load_and_filter_content(url, selector):
     # Initialize AsyncChromiumLoader with the URL and a user agent
     loader = AsyncChromiumLoader([url],
@@ -23,4 +24,3 @@ def filter_by_html_tag(url: str, body: str, css_class: str):
     elements = soup.find_all(class_=css_class)
     content = '\n'.join(element.get_text() for element in elements)
     return content
-

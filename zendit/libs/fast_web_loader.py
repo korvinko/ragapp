@@ -3,6 +3,7 @@ from langchain_community.document_loaders import WebBaseLoader
 from langchain_core.documents import Document
 from bs4 import BeautifulSoup
 
+
 class CustomWebBaseLoader(WebBaseLoader):
     def __init__(self, url: str, css_class: str):
         self.url = url

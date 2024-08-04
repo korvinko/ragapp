@@ -15,5 +15,5 @@ def file_exists(file_path):
     return os.path.exists(file_path)
 
 
-def filePathByURL(baseFolder, url):
+def file_path_by_url(baseFolder, url):
     return os.path.join(baseFolder, url.split('//')[1].replace('/', '_')) + ".txt"

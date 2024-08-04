@@ -2,18 +2,21 @@ from langchain_community.vectorstores import LanceDB
 from langchain_community.embeddings import OllamaEmbeddings
 import lancedb
 import os
+from langchain_core.documents import Document
 
-def getEmbeddings():
+
+def get_embeddings():
     # create the open-source embedding function
-    return OllamaEmbeddings(base_url="http://localhost:11434", model="rjmalagon/gte-qwen2-7b-instruct-embed-f16")
+    return OllamaEmbeddings(base_url="http://localhost:11434", model=os.getenv("OLLAMA_EMBEDDING_MODEL"))
 
-def getVectorStore():
+
+def get_vector_store():
     # Connect to local LanceDB
     db_path = os.getenv("DATABASE_PATH")  # Adjust the path as necessary for your setup
     db = lancedb.connect(uri=db_path)
 
     # create the open-source embedding function
-    embeddings = getEmbeddings()
+    embeddings = get_embeddings()
 
     # Initialize LanceDB vector store
     vc = LanceDB(
@@ -25,3 +28,26 @@ def getVectorStore():
     return vc
 
 
+def get_doc(content: str):
+    doc = Document(page_content=content)
+    return doc
+
+
+def load_docs(dataset_folder):
+    docs = []  # initialize an empty list to store the documents
+    if dataset_folder:  # ensure the dataset folder is defined
+        for filename in os.listdir(dataset_folder):  # iterate through each file in the dataset folder
+            file_path = os.path.join(dataset_folder, filename)
+            if os.path.isfile(file_path):  # ensure the path is indeed a file
+                with open(file_path, 'r') as file:
+                    content = file.read()
+                    final_doc = get_doc(content)  # convert the content into a document
+                    docs.append(final_doc)  # append the document to the docs list
+    return docs
+
+
+def cleanup_vector_store():
+    # Connect to local LanceDB
+    db_path = os.getenv("DATABASE_PATH")  # Adjust the path as necessary for your setup
+    db = lancedb.connect(uri=db_path)
+    db.drop_table(os.getenv("DATABASE_TABLE"))

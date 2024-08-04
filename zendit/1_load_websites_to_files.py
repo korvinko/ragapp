@@ -1,7 +1,7 @@
 from libs.web_loader import load_and_filter_content
 from libs.cleaner import DatasetCleaner
 from libs.files import save_document
-from libs.files import filePathByURL
+from libs.files import file_path_by_url
 from libs.files import file_exists
 from dotenv import load_dotenv
 import os
@@ -33,7 +33,7 @@ urls_css_classes = [
 dc = DatasetCleaner()
 
 for url, css_class in urls_css_classes:
-    file_path = filePathByURL(os.getenv("BASE_FOLDER"), url)
+    file_path = file_path_by_url(os.getenv("BASE_FOLDER"), url)
     if file_exists(file_path):
         continue
     doc = load_and_filter_content(url, css_class)
