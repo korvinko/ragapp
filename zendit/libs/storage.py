@@ -1,7 +1,7 @@
-# import
 from langchain_community.vectorstores import LanceDB
 from langchain_community.embeddings import OllamaEmbeddings
 import lancedb
+import os
 
 def getEmbeddings():
     # create the open-source embedding function
@@ -9,7 +9,7 @@ def getEmbeddings():
 
 def getVectorStore():
     # Connect to local LanceDB
-    db_path = "/home/korvinko/Documents/store/zendit"  # Adjust the path as necessary for your setup
+    db_path = os.getenv("DATABASE_PATH")  # Adjust the path as necessary for your setup
     db = lancedb.connect(uri=db_path)
 
     # create the open-source embedding function
@@ -19,7 +19,7 @@ def getVectorStore():
     vc = LanceDB(
         uri=db_path,
         embedding=embeddings,
-        table_name='zendit_university'
+        table_name=os.getenv("DATABASE_TABLE")
     )
 
     return vc
