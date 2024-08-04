@@ -8,5 +8,5 @@ dataset_folder = os.getenv("BASE_FOLDER")
 
 docs = load_docs(dataset_folder)
 cleanup_vector_store()
-vc = get_vector_store()
-vc.add_documents(docs)
+vs = get_vector_store()
+vs.add_documents(docs)

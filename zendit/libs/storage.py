@@ -19,17 +19,17 @@ def get_vector_store():
     embeddings = get_embeddings()
 
     # Initialize LanceDB vector store
-    vc = LanceDB(
+    vs = LanceDB(
         uri=db_path,
         embedding=embeddings,
         table_name=os.getenv("DATABASE_TABLE")
     )
 
-    return vc
+    return vs
 
 
 def get_doc(content: str):
-    doc = Document(page_content=content)
+    doc = Document(page_content=content, metadata={"source": "http://zendit.io"})
     return doc
 
 
@@ -50,4 +50,8 @@ def cleanup_vector_store():
     # Connect to local LanceDB
     db_path = os.getenv("DATABASE_PATH")  # Adjust the path as necessary for your setup
     db = lancedb.connect(uri=db_path)
-    db.drop_table(os.getenv("DATABASE_TABLE"))
+    try:
+        db.drop_table(os.getenv("DATABASE_TABLE"))
+    except Exception as e:
+        print(e)
+        pass

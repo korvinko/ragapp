@@ -1,11 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from helpers import getVectorStore
 from langchain_community.llms import Ollama
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.callbacks.manager import CallbackManager
 from langchain.chains import RetrievalQA
 from langchain_core.prompts import PromptTemplate
+from libs.storage import get_vector_store
 import os
 
 # Initialize FastAPI app
@@ -28,7 +28,7 @@ QA_CHAIN_PROMPT = PromptTemplate(
 )
 
 # Set up the vector store and model
-vc = getVectorStore()
+vc = get_vector_store()
 llm = Ollama(model=os.getenv("OLLAMA_MODEL"), callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]))
 qa_chain = RetrievalQA.from_chain_type(
     llm,

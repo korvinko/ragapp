@@ -1,10 +1,13 @@
-from helpers import getVectorStore
 from langchain_community.llms import Ollama
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.callbacks.manager import CallbackManager
 from langchain.chains import RetrievalQA
 from langchain_core.prompts import PromptTemplate
+from libs.storage import get_vector_store
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 # Predefined query
 query = "Tell me about security features"
@@ -21,12 +24,12 @@ QA_CHAIN_PROMPT = PromptTemplate(
     template=template,
 )
 
-vc = getVectorStore()
+vs = get_vector_store()
 
 llm = Ollama(model=os.getenv("OLLAMA_MODEL"), callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]))
 qa_chain = RetrievalQA.from_chain_type(
     llm,
-    retriever=vc.as_retriever(),
+    retriever=vs.as_retriever(),
     chain_type_kwargs={"prompt": QA_CHAIN_PROMPT},
 )
 
