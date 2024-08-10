@@ -19,11 +19,9 @@ class QueryRequest(BaseModel):
     query: str
 
 # Define the prompt template
-template = """Use the following pieces of context to answer the question at the end.
-If you don't know the answer, just say that you don't know, don't try to make up an answer.
-Use three sentences maximum and keep the answer as concise as possible. Always answer in Zendit context. Return output in markdown format.
+template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know; don't try to make up an answer. Be as concise as possible, but provide all details if the user asks.
 {context}
-Question: {question}. This question is related to zendit.io.
+Question: {question}. This question is related to the service zendit.io. Provide the URL to the documentation next to the provided information. Return output in markdown format.
 Helpful Answer:"""
 QA_CHAIN_PROMPT = PromptTemplate(
     input_variables=["context", "question"],
