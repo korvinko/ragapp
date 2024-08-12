@@ -24,7 +24,7 @@ QA_CHAIN_PROMPT = PromptTemplate(
 
 vs = get_vector_store()
 
-llm = Ollama(model=os.getenv("OLLAMA_MODEL"), callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]))
+llm = Ollama(model=os.getenv("OLLAMA_MODEL"), base_url=os.getenv("OLLAMA_ADDRESS"), callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]))
 qa_chain = RetrievalQA.from_chain_type(
     llm,
     retriever=vs.as_retriever(),

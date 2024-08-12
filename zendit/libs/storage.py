@@ -7,7 +7,7 @@ from langchain_core.documents import Document
 
 def get_embeddings():
     # create the open-source embedding function
-    return OllamaEmbeddings(base_url="http://localhost:11434", model=os.getenv("OLLAMA_EMBEDDING_MODEL"))
+    return OllamaEmbeddings(base_url=os.getenv("OLLAMA_ADDRESS"), model=os.getenv("OLLAMA_EMBEDDING_MODEL"))
 
 
 def get_vector_store():

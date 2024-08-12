@@ -6,10 +6,11 @@ ollama serve &
 pid=$!
 
 # Pause for Ollama to start.
-sleep 5
+sleep 10
 
 echo "🔴 Retrieving model..."
 ollama pull llama3.1:8b
+ollama pull rjmalagon/gte-qwen2-7b-instruct-embed-f16
 echo "🟢 Done!"
 
 # Wait for Ollama process to finish.

@@ -21,5 +21,8 @@ docker-build:
 docker-test-run:
 	docker run --rm ragapp
 
+compose-build:
+	docker compose -f docker/docker-compose.yml build
+
 compose-start:
 	docker compose -f docker/docker-compose.yml up

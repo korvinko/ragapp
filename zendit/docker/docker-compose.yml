@@ -9,9 +9,7 @@ services:
     restart: unless-stopped
     depends_on:
       - ollama
-    networks:
-      - ollama-docker
-      
+
   ollama:
     build:
       context: ./
@@ -22,12 +20,8 @@ services:
     tty: true
     restart: unless-stopped
     image: ollama/ollama:latest
-    ports:
-      - 7869:11434
     environment:
       - OLLAMA_KEEP_ALIVE=24h
-    networks:
-      - ollama-docker
     deploy:
       resources:
         reservations:
@@ -35,7 +29,3 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-
-networks:
-  ollama-docker:
-    external: false
