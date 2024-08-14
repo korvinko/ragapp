@@ -1,9 +1,8 @@
 venv
-zendit/.env
 .env
 .env_back
-zendit/index.html
-zendit/docker/ollama
-zendit/dataset
-zendit/store
-zendit/data
+index.html
+docker/ollama
+dataset
+store
+data
