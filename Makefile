@@ -26,3 +26,12 @@ compose-build:
 
 compose-start:
 	docker compose -f docker/docker-compose.yml up
+
+push-docker-images:
+	aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 117521322591.dkr.ecr.us-east-1.amazonaws.com
+
+    docker tag docker-ragapp 117521322591.dkr.ecr.us-east-1.amazonaws.com/ai-assistant-rag
+    docker push 117521322591.dkr.ecr.us-east-1.amazonaws.com/ai-assistant-rag
+
+    docker tag ollama/ollama 117521322591.dkr.ecr.us-east-1.amazonaws.com/ai-assistant-ollama
+    docker push 117521322591.dkr.ecr.us-east-1.amazonaws.com/ai-assistant-ollama
