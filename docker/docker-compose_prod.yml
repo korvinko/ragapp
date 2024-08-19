@@ -1,0 +1,32 @@
+services:
+  ragapp:
+    image: 117521322591.dkr.ecr.us-east-1.amazonaws.com/ai-assistant-rag:latest
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    ports:
+      - 8000:8000
+    command: uvicorn 4_rest_app:app --host 0.0.0.0 --port 8000 --reload
+    restart: unless-stopped
+    depends_on:
+      - ollama
+
+  ollama:
+    image: 117521322591.dkr.ecr.us-east-1.amazonaws.com/ai-assistant-ollama:latest
+    build:
+      context: ./
+      dockerfile: Dockerfile-Ollama
+    volumes:
+      - ./ollama/ollama:/root/.ollama
+    container_name: ollama
+    tty: true
+    restart: unless-stopped
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
