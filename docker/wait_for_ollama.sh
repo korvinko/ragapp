@@ -10,7 +10,7 @@ sleep 10
 
 echo "🔴 Retrieving model..."
 ollama pull llama3.1:8b
-ollama pull rjmalagon/gte-qwen2-7b-instruct-embed-f16
+ollama pull rjmalagon/gte-qwen2-1.5b-instruct-embed-f16
 echo "🟢 Done!"
 
 # Wait for Ollama process to finish.

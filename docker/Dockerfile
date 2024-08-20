@@ -5,14 +5,14 @@ FROM python:3.12.5
 WORKDIR /app
 
 # Copy the current directory contents into the container at /app
-COPY . /app
+COPY ./ /app/
 
-# Install any needed packages specified in requirements.txt
-# Ensure that all dependencies are installed
+## Install any needed packages specified in requirements.txt
+## Ensure that all dependencies are installed
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install uvicorn
-RUN pip install uvicorn
+## Install uvicorn
+RUN pip install --no-cache-dir uvicorn
 
 # Make port 8000 available to the world outside this container
 EXPOSE 8000

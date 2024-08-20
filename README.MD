@@ -27,7 +27,7 @@ sudo systemctl enable --now ollama
 ### Pull models
 ```bash
 ollama pull llama3.1:8b
-ollama pull rjmalagon/gte-qwen2-7b-instruct-embed-f16
+ollama pull Losspost/stella_en_1.5b_v5
 ```
 
 ### Install Dependencies

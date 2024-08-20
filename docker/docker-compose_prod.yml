@@ -13,6 +13,8 @@ services:
 
   ollama:
     image: 117521322591.dkr.ecr.us-east-1.amazonaws.com/ai-assistant-ollama:latest
+    ports:
+      - 11434:11434
     build:
       context: ./
       dockerfile: Dockerfile-Ollama

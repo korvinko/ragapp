@@ -10,6 +10,9 @@ load-dataset:
 test-rag:
 	python 3_optional_test_rag.py
 
+test-llm:
+	python 3_optional_test_llm.py
+
 start-server:
 	uvicorn 4_rest_app:app --reload --host 0.0.0.0 --port 8000
 
