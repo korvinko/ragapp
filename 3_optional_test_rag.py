@@ -31,6 +31,4 @@ qa_chain = RetrievalQA.from_chain_type(
     chain_type_kwargs={"prompt": QA_CHAIN_PROMPT},
 )
 
-result = qa_chain({"query": query})
-
-print(result)
+qa_chain({"query": query})
