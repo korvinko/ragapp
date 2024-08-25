@@ -7,12 +7,16 @@ from langchain.chains import RetrievalQA
 from langchain_core.prompts import PromptTemplate
 from libs.storage import get_vector_store
 from dotenv import load_dotenv
+from fastapi.staticfiles import StaticFiles
 import os
 
 load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI()
+
+# Mount the static directory to serve HTML and other static files
+app.mount("/web", StaticFiles(directory="./static"), name="index.html")
 
 # Define request body
 class QueryRequest(BaseModel):

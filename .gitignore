@@ -1,7 +1,6 @@
 venv
 .env
 .env_back
-index.html
 docker/ollama
 dataset
 store

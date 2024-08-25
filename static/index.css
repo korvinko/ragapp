@@ -1,0 +1,95 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1E1E1E;
+    color: #D4D4D4;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+#dialog-container {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #252526;
+}
+
+#dialog {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message {
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 60%;
+}
+
+.user-message {
+    background-color: #007BFF;
+    color: white;
+    align-self: flex-end;
+}
+
+.bot-message {
+    background-color: #3C3C3C;
+    color: #D4D4D4;
+    align-self: flex-start;
+}
+
+#input-container {
+    display: flex;
+    padding: 10px;
+    background-color: #1E1E1E;
+    border-top: 1px solid #3C3C3C;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    background-color: #252526;
+    color: #D4D4D4;
+    border: 1px solid #3C3C3C;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* General link style */
+a {
+    color: #1E90FF; /* Light blue color for visibility */
+    text-decoration: underline; /* Underline the link to make it clear */
+    font-weight: bold; /* Make links bold */
+}
+
+a:hover {
+    color: #4682B4; /* Darker shade of blue on hover */
+}
+
+/* Specific styling inside bot messages */
+.bot-message a {
+    color: #87CEFA; /* Light sky blue color for links in bot messages */
+    background-color: #2F4F4F; /* Dark background to make the text pop */
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.bot-message a:hover {
+    color: #00BFFF; /* Bright blue on hover */
+    background-color: #4F4F4F; /* Slightly lighter background on hover */
+}
