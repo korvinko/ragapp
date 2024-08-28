@@ -17,6 +17,7 @@ urls_css_classes = [
     ("https://developers.zendit.io/zendit-university/transaction-processing/", "p-xl-5"),
     ("https://developers.zendit.io/zendit-university/webhooks/", "p-xl-5"),
     ("https://developers.zendit.io/zendit-university/queue-and-retry/", "p-xl-5"),
+    ("https://developers.zendit.io/zendit-university/digital-gift-cards/", "p-xl-5"),
     ("https://developers.zendit.io/zendit-university/zendit-alerts/", "p-xl-5"),
     ("https://developers.zendit.io/zendit-university/zendit-shieldwall/", "p-xl-5"),
     ("https://developers.zendit.io/zendit-university/esims/", "p-xl-5"),
@@ -28,12 +29,13 @@ urls_css_classes = [
     ("https://developers.zendit.io/totp-multifactor-authentication/", "col-lg-9"),
     ("https://developers.zendit.io/php-sdk/", "col-lg-9"),
     ("https://developers.zendit.io/nodejs-sdk/", "col-lg-9"),
+    # ("https://api.zendit.io/swagger/doc.json", "col-lg-9"),
 ]
 
 dc = DatasetCleaner()
 
 for url, css_class in urls_css_classes:
-    file_path = file_path_by_url(os.getenv("BASE_FOLDER"), url)
+    file_path = file_path_by_url(os.getenv("DATASET_DIRECTORY"), url)
     if file_exists(file_path):
         continue
     doc = load_and_filter_content(url, css_class)

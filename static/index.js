@@ -1,4 +1,15 @@
-const endpointURL = "http://localhost:8000/ask"
+const endpointURL = "/ask"
+
+let historyKey = generateRandomString();
+
+function generateRandomString() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 12; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+}
 
 function sendQuery() {
     const queryText = document.getElementById('query').value;
@@ -20,7 +31,7 @@ function sendQuery() {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ query: queryText })
+        body: JSON.stringify({ query: queryText, historyKey: historyKey })
     })
         .then(response => response.json())
         .then(data => {

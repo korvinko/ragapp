@@ -9,7 +9,7 @@ class DatasetCleaner:
 
     def __init__(self):
         self.llm = Ollama(
-            model=os.getenv("OLLAMA_MODEL"),
+            model=os.getenv("OLLAMA_MAIN_MODEL"),
             num_ctx=25048,  # input number of token limit
             num_predict=25048,  # output number of token limit
             temperature=0.3,  # precise
