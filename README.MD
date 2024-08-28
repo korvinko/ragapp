@@ -124,10 +124,24 @@ export class DevAiAssistant extends cdk.Stack {
         // Attach the necessary ECR policy to the role
         ec2Role.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonEC2ContainerRegistryReadOnly'));
 
-        // AMI with preinstalled nvidia GPU drivers
+        // Reference the specific subnet by ID and availability zone
+        const privateSubnet = ec2.Subnet.fromSubnetAttributes(this, 'PrivateSubnet', {
+            subnetId: 'subnet-0fac4855dc75bbfd0',
+            availabilityZone: 'us-east-1a',  // Replace with the correct AZ for your subnet
+        });
+
+        // Specify the AMI by its image ID
         const machineImage = ec2.MachineImage.genericLinux({
             'us-east-1': 'ami-0f9bda29a1b2c9dd7',  // Replace with your correct region and AMI ID
         });
+
+        const securityGroup = new ec2.SecurityGroup(this, 'SecurityGroup', {
+            vpc: props.vpc,
+            allowAllOutbound: true,
+        });
+
+        // Since we are in private network, allow all inbound traffic is not a security risk
+        securityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.allTraffic(), 'Allow all inbound traffic');
 
         // EC2 Instance
         const instance = new ec2.Instance(this, 'ai-assistant', {
@@ -135,16 +149,19 @@ export class DevAiAssistant extends cdk.Stack {
             machineImage: machineImage, // Change this based on your AMI requirements
             vpc: props.vpc,
             keyName: 'ai_assistent',
+            vpcSubnets: {
+                subnets: [privateSubnet], // Use the specified private subnet
+            },
             role: ec2Role,  // Attach the role to the instance
+            securityGroup: securityGroup,
         });
 
-        // User data script to install Docker Compose
+        // User data script to install Docker and Docker Compose
         const userData = ec2.UserData.forLinux();
         userData.addCommands(
             'sudo yum update -y',
             'sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose',
             'sudo chmod +x /usr/local/bin/docker-compose',
-            'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 117521322591.dkr.ecr.us-east-1.amazonaws.com',
         );
 
         // Add the user data to the instance
