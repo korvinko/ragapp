@@ -1,4 +1,4 @@
-const endpointURL = "http://localhost:8000/ask"
+const endpointURL = /ask"
 
 function sendQuery() {
     const queryText = document.getElementById('query').value;
