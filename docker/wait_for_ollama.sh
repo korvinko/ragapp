@@ -9,7 +9,7 @@ pid=$!
 sleep 10
 
 echo "🔴 Retrieving model..."
-ollama pull llama3.1:8b
+ollama pull qwen2.5:7b-instruct
 ollama pull rjmalagon/gte-qwen2-1.5b-instruct-embed-f16
 echo "🟢 Done!"
 
