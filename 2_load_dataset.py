@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-dataset_folder = os.getenv("BASE_FOLDER")
+dataset_folder = os.getenv("DATASET_DIRECTORY")
 
 docs = load_docs(dataset_folder)
 cleanup_vector_store()

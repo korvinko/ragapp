@@ -12,7 +12,7 @@ def get_embeddings():
 
 def get_vector_store():
     # Connect to local LanceDB
-    db_path = os.getenv("DATABASE_PATH")  # Adjust the path as necessary for your setup
+    db_path = os.getenv("DATABASE_DIRECTORY")  # Adjust the path as necessary for your setup
     db = lancedb.connect(uri=db_path)
 
     # create the open-source embedding function
@@ -48,7 +48,7 @@ def load_docs(dataset_folder):
 
 def cleanup_vector_store():
     # Connect to local LanceDB
-    db_path = os.getenv("DATABASE_PATH")  # Adjust the path as necessary for your setup
+    db_path = os.getenv("DATABASE_DIRECTORY")  # Adjust the path as necessary for your setup
     db = lancedb.connect(uri=db_path)
     try:
         db.drop_table(os.getenv("DATABASE_TABLE"))

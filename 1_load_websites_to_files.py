@@ -33,7 +33,7 @@ urls_css_classes = [
 dc = DatasetCleaner()
 
 for url, css_class in urls_css_classes:
-    file_path = file_path_by_url(os.getenv("BASE_FOLDER"), url)
+    file_path = file_path_by_url(os.getenv("DATASET_DIRECTORY"), url)
     if file_exists(file_path):
         continue
     doc = load_and_filter_content(url, css_class)

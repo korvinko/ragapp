@@ -13,8 +13,8 @@ cp .env_localhost .env
 
 Provide your own values in the .env file:
 ```env
-BASE_FOLDER="/path/to/the/dataset/files"
-DATABASE_PATH="/path/to/the/vectore/db/files"
+DATASET_DIRECTORY="/path/to/the/dataset/files"
+DATABASE_DIRECTORY="/path/to/the/vectore/db/files"
 DATABASE_TABLE="TABLE_NAME_OF_YOUR_DB"
 ```
 
