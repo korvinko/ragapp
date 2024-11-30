@@ -20,7 +20,8 @@ QA_PROMPT = PromptTemplate(
 # Initialize the language model
 llm = Ollama(
     model=os.getenv("OLLAMA_MAIN_MODEL"),
-    base_url=os.getenv("OLLAMA_ADDRESS")
+    base_url=os.getenv("OLLAMA_ADDRESS"),
+    temperature=0.1,
 )
 
 # Format the prompt with the query
