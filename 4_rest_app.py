@@ -7,7 +7,7 @@ from langchain.callbacks.manager import CallbackManager
 from langchain.chains import RetrievalQA
 from langchain_core.prompts import PromptTemplate
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 import markdown
 from libs.storage import get_vector_store
 from dotenv import load_dotenv
@@ -18,6 +18,12 @@ import random
 import string
 from typing import List
 import logging
+import time
+from fastapi import FastAPI, Request
+from fastapi.responses import StreamingResponse
+import asyncio
+import json
+import time
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -128,5 +134,78 @@ async def completions(request: Request):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# To run the app, use the following command in terminal
-# uvicorn api:app --reload --host 0.0.0.0 --port 8000
+@app.get("/api/tags")
+def ollamaTags():
+    try:
+        # Define the object to return
+        response_data = {
+            "models": [
+                {
+                    "name": "ai-assistant",
+                    "model": "ai-assistant",
+                    "modified_at": "",
+                    "size": 0,
+                    "digest": "",
+                    "details": {},
+                }
+            ]
+        }
+        return JSONResponse(content=response_data, status_code=200)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+class ChatRequest(BaseModel):
+    model: str
+    messages: List[Message]
+    stream: bool = False
+
+@app.post("/v1/chat/completions")
+def ollamaChat(request: ChatRequest):
+    try:
+        # Convert messages to a single string
+        messages = request.messages
+        formatted_prompt = "\n".join([f"{msg.role}: {msg.content}" for msg in messages])
+
+        qa_chain = RetrievalQA.from_chain_type(
+            llm,
+            retriever=vc.as_retriever(),
+            chain_type_kwargs={"prompt": QA_CHAIN_PROMPT},
+            chain_type="stuff",
+        )
+
+        result = qa_chain({"query": formatted_prompt})
+        resp = result.get("result")
+
+        # Convert Markdown to HTML
+        md_resp = markdown.markdown(
+            resp,
+            extensions=["extra", "sane_lists"]  # Better Markdown list and formatting handling
+        )
+
+        async def event_stream():
+            # Simulate streaming chunks of the response
+            response = {
+                "id": "chatcmpl-81",
+                "object": "chat.completion.chunk",
+                "created": int(time.time()),
+                "model": "hf.co/bartowski/Replete-LLM-V2.5-Qwen-14b-GGUF:latest",
+                "system_fingerprint": "fp_ollama",
+                "choices": [
+                    {
+                        "index": 0,
+                        "delta": {
+                            "role": "assistant",
+                            "content": md_resp
+                        },
+                        "finish_reason": "null"
+                    }
+                ]
+            }
+
+            yield f"data: {json.dumps(response)}\n\n"
+            yield f"data: [DONE]\n\n"
+
+        return StreamingResponse(event_stream(), media_type="text/event-stream")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
