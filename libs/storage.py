@@ -1,5 +1,5 @@
+from langchain_ollama import OllamaEmbeddings
 from langchain_community.vectorstores import LanceDB
-from langchain_community.embeddings import OllamaEmbeddings
 import lancedb
 import os
 from langchain_core.documents import Document

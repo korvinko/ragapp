@@ -30,6 +30,7 @@ llm = OllamaLLM(
     callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]),
     temperature=0.1,
 )
+
 qa_chain = RetrievalQA.from_chain_type(
     llm,
     retriever=vs.as_retriever(),
@@ -37,4 +38,5 @@ qa_chain = RetrievalQA.from_chain_type(
     chain_type="stuff",
 )
 
-qa_chain({"query": query})
+# Process the result using streaming
+result = qa_chain.invoke({"query": query})

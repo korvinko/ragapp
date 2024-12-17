@@ -2,6 +2,7 @@ from langchain_ollama.llms import OllamaLLM
 from langchain_core.prompts import PromptTemplate
 from dotenv import load_dotenv
 import os
+import time
 
 load_dotenv()
 
@@ -27,8 +28,14 @@ llm = OllamaLLM(
 # Format the prompt with the query
 formatted_prompt = QA_PROMPT.format(question=query)
 
-# Get the result from the model
-result = llm(formatted_prompt)
+# Get the result from the model using streaming
+stream = llm.stream(formatted_prompt)
 
-# Output the result
-print(result)
+
+start_time = time.time()
+# Process the stream and print the output
+for chunk in stream:
+    print(chunk, end="", flush=True)
+
+end_time = time.time()
+print(f"\n\nProcessing time: {end_time - start_time:.2f} seconds")
