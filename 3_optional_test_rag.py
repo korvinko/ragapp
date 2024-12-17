@@ -1,4 +1,4 @@
-from langchain_community.llms import Ollama
+from langchain_ollama.llms import OllamaLLM
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.callbacks.manager import CallbackManager
 from langchain.chains import RetrievalQA
@@ -24,7 +24,7 @@ QA_CHAIN_PROMPT = PromptTemplate(
 
 vs = get_vector_store()
 
-llm = Ollama(
+llm = OllamaLLM(
     model=os.getenv("OLLAMA_MAIN_MODEL"),
     base_url=os.getenv("OLLAMA_ADDRESS"),
     callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]),

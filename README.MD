@@ -45,7 +45,7 @@ Install all necessary dependencies using pip:
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-playwright install
+python -m playwright install
 ```
 
 ## Create the Dataset

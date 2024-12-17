@@ -1,12 +1,11 @@
 from fastapi import HTTPException
 from pydantic import BaseModel
-from langchain_community.llms import Ollama
+from langchain_ollama.llms import OllamaLLM
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.memory import ConversationBufferMemory
 from langchain.callbacks.manager import CallbackManager
 from langchain.chains import RetrievalQA
 from langchain_core.prompts import PromptTemplate
-from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 import markdown
 from libs.storage import get_vector_store
@@ -18,10 +17,8 @@ import random
 import string
 from typing import List
 import logging
-import time
 from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
-import asyncio
 import json
 import time
 
@@ -63,7 +60,7 @@ QA_CHAIN_PROMPT = PromptTemplate(
 # Set up the vector store and model
 vc = get_vector_store()
 # Initialize memory for conversation
-llm = Ollama(
+llm = OllamaLLM(
     model=os.getenv("OLLAMA_MAIN_MODEL"),
     base_url=os.getenv("OLLAMA_ADDRESS"),
     callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]),

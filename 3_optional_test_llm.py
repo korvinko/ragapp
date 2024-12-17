@@ -1,4 +1,4 @@
-from langchain_community.llms import Ollama
+from langchain_ollama.llms import OllamaLLM
 from langchain_core.prompts import PromptTemplate
 from dotenv import load_dotenv
 import os
@@ -18,7 +18,7 @@ QA_PROMPT = PromptTemplate(
 )
 
 # Initialize the language model
-llm = Ollama(
+llm = OllamaLLM(
     model=os.getenv("OLLAMA_MAIN_MODEL"),
     base_url=os.getenv("OLLAMA_ADDRESS"),
     temperature=0.1,

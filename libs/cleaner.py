@@ -1,14 +1,14 @@
 import os
 
-from langchain_community.llms import Ollama
+from langchain_ollama.llms import OllamaLLM
 
 
 class DatasetCleaner:
-    llm: Ollama
+    llm: OllamaLLM
     prompt: str
 
     def __init__(self):
-        self.llm = Ollama(
+        self.llm = OllamaLLM(
             model=os.getenv("OLLAMA_MAIN_MODEL"),
             num_ctx=25048,  # input number of token limit
             num_predict=25048,  # output number of token limit
