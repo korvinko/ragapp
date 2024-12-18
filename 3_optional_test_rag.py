@@ -1,13 +1,21 @@
+import json
+import time
+import asyncio
 from langchain_ollama.llms import OllamaLLM
-from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
-from langchain.callbacks.manager import CallbackManager
-from langchain.chains import RetrievalQA
 from langchain_core.prompts import PromptTemplate
 from libs.storage import get_vector_store
 from dotenv import load_dotenv
 import os
+from pydantic import BaseModel
 
 load_dotenv()
+
+class Message(BaseModel):
+    role: str
+    content: str
+
+class ChatRequest(BaseModel):
+    messages: list[Message]
 
 # Predefined query
 query = "Tell me about security features. Provide all information."
@@ -27,16 +35,27 @@ vs = get_vector_store()
 llm = OllamaLLM(
     model=os.getenv("OLLAMA_MAIN_MODEL"),
     base_url=os.getenv("OLLAMA_ADDRESS"),
-    callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]),
     temperature=0.1,
 )
 
-qa_chain = RetrievalQA.from_chain_type(
-    llm,
-    retriever=vs.as_retriever(),
-    chain_type_kwargs={"prompt": QA_CHAIN_PROMPT},
-    chain_type="stuff",
-)
+async def main():
+    try:
 
-# Process the result using streaming
-result = qa_chain.invoke({"query": query})
+        messages = [Message(role="user", content=query)]
+        formatted_prompt = "\n".join([f"{msg.role}: {msg.content}" for msg in messages])
+
+        retriever = vs.as_retriever()
+        docs = await retriever.ainvoke(formatted_prompt)
+        context = "\n\n".join([doc.page_content for doc in docs])
+
+        final_prompt = QA_CHAIN_PROMPT.format(context=context, question=formatted_prompt)
+
+        async for chunk in llm.astream(final_prompt):
+            print(chunk, end="", flush=True)
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

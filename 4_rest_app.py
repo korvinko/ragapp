@@ -1,9 +1,7 @@
 from fastapi import HTTPException
 from pydantic import BaseModel
 from langchain_ollama.llms import OllamaLLM
-from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.memory import ConversationBufferMemory
-from langchain.callbacks.manager import CallbackManager
 from langchain.chains import RetrievalQA
 from langchain_core.prompts import PromptTemplate
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -63,7 +61,7 @@ vc = get_vector_store()
 llm = OllamaLLM(
     model=os.getenv("OLLAMA_MAIN_MODEL"),
     base_url=os.getenv("OLLAMA_ADDRESS"),
-    callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]),
+    # callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]),
     temperature=0.1,
 )
 
@@ -157,52 +155,44 @@ class ChatRequest(BaseModel):
     messages: List[Message]
     stream: bool = False
 
+
 @app.post("/v1/chat/completions")
-def ollamaChat(request: ChatRequest):
+async def ollamaChat(request: ChatRequest):
     try:
         # Convert messages to a single string
         messages = request.messages
         formatted_prompt = "\n".join([f"{msg.role}: {msg.content}" for msg in messages])
 
-        qa_chain = RetrievalQA.from_chain_type(
-            llm,
-            retriever=vc.as_retriever(),
-            chain_type_kwargs={"prompt": QA_CHAIN_PROMPT},
-            chain_type="stuff",
-        )
+        retriever = vc.as_retriever()
+        docs = await retriever.ainvoke(formatted_prompt)
+        context = "\n\n".join([doc.page_content for doc in docs])
 
-        result = qa_chain({"query": formatted_prompt})
-        resp = result.get("result")
-
-        # Convert Markdown to HTML
-        md_resp = markdown.markdown(
-            resp,
-            extensions=["extra", "sane_lists"]  # Better Markdown list and formatting handling
-        )
+        final_prompt = QA_CHAIN_PROMPT.format(context=context, question=formatted_prompt)
 
         async def event_stream():
-            # Simulate streaming chunks of the response
-            response = {
-                "id": "chatcmpl-81",
-                "object": "chat.completion.chunk",
-                "created": int(time.time()),
-                "model": "hf.co/bartowski/Replete-LLM-V2.5-Qwen-14b-GGUF:latest",
-                "system_fingerprint": "fp_ollama",
-                "choices": [
-                    {
-                        "index": 0,
-                        "delta": {
-                            "role": "assistant",
-                            "content": md_resp
-                        },
-                        "finish_reason": "null"
-                    }
-                ]
-            }
+            async for chunk in llm.astream(final_prompt):
+                response = {
+                    "id": "chatcmpl-81",
+                    "object": "chat.completion.chunk",
+                    "created": int(time.time()),
+                    "model": os.getenv("OLLAMA_MAIN_MODEL"),
+                    "system_fingerprint": "fp_ollama",
+                    "choices": [
+                        {
+                            "index": 0,
+                            "delta": {
+                                "role": "assistant",
+                                "content": chunk
+                            },
+                            "finish_reason": None,
+                        }
+                    ]
+                }
+                yield f"data: {json.dumps(response)}\n\n"
 
-            yield f"data: {json.dumps(response)}\n\n"
-            yield f"data: [DONE]\n\n"
+            yield "data: [DONE]\n\n"
 
         return StreamingResponse(event_stream(), media_type="text/event-stream")
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
